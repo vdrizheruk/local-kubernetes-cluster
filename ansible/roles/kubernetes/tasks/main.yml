@@ -1,0 +1,12 @@
+---
+  - name: Add Kubernetes Repository
+    become: yes
+    shell: echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
+
+  - name: Update apt again
+    become: yes
+    apt:  update_cache=yes
+
+  - name: Install Kubernetes packages
+    become: yes
+    shell: apt-get install -y docker.io kubelet kubeadm kubectl kubernetes-cni --allow-unauthenticated
