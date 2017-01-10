@@ -1,0 +1,45 @@
+- name: check swap created
+  stat:
+    path: "/swapfile"
+  register: swap
+  tags:
+    - swap
+
+- name: create swap file
+  shell: "fallocate -l 4G /swapfile"
+  when: swap.stat.exists == false
+  become: yes
+  tags:
+    - swap
+
+- name: set mode
+  file:
+    path: "/swapfile"
+    mode: 0600
+  when: swap.stat.exists == false
+  become: yes
+  tags:
+    - swap
+
+- name: make swap
+  shell: "mkswap /swapfile"
+  when: swap.stat.exists == false
+  become: yes
+  tags:
+    - swap
+
+- name: activate swap
+  shell: "swapon /swapfile"
+  when: swap.stat.exists == false
+  become: yes
+  tags:
+    - swap
+
+- name: activate swap at start OS
+  lineinfile:
+    dest: /etc/fstab
+    line: "/swapfile   none    swap    sw    0   0"
+  when: swap.stat.exists == false
+  become: yes
+  tags:
+    - swap
