@@ -1,0 +1,9 @@
+FROM vault:%VAULT_VERSION%
+
+COPY bin/run.sh /opt/bin/run.sh
+RUN chmod a+x /opt/bin/run.sh
+VOLUME ["/vault/logs", "/vault/file"]
+
+EXPOSE 8200
+
+CMD ["/opt/bin/run.sh"]
