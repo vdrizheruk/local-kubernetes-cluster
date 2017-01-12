@@ -5,7 +5,7 @@ DIR=$(dirname $(readlink -f "$0"))
 
 KUBECTL=/usr/bin/kubectl
 NAMESPACE="vault"
-VAULT_IMAGE=vault:0.6.2
+VAULT_IMAGE="vdrizheruk/vault:0.6.4"
 
 while [ -z ${SRV_CONTAINER_POOL} ] || [ 0 -eq ${#SRV_CONTAINER_POOL} ]; do
   note "Please specify pool for service containers (by default it's must be a cluster name):"
