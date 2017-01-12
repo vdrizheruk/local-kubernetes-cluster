@@ -1,0 +1,67 @@
+{
+  "kind": "ReplicationController",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "elastic-%TIMESTAMP%",
+    "labels": {
+      "name": "elastic",
+      "version": "%TIMESTAMP%"
+    }
+  },
+  "spec": {
+    "replicas": %REPLICAS_COUNT%,
+    "selector": {"name": "elastic", "version": "%TIMESTAMP%"},
+    "template": {
+      "metadata": {
+        "labels": {
+          "function": "elastic-%TIMESTAMP%",
+          "name": "elastic",
+          "version": "%TIMESTAMP%"
+        }
+      },
+      "spec": {
+        "volumes": [
+          {
+            "name": "data",
+            "hostPath": {"path": "/srv/service/%SRV_CONTAINER_POOL%/elastic/data"}
+          }
+        ],
+        "containers": [
+          {
+            "name": "elastic",
+            "image": "%IMAGE%",
+            "imagePullPolicy": "Always",
+            "ports": [
+              {
+                "name": "port-9200",
+                "containerPort": 9200
+              },
+              {
+                "name": "port-9300",
+                "containerPort": 9300
+              }
+            ],
+            "resources": {
+              "limits": {
+                "memory": "%MEMORY_LIMIT%",
+                "cpu": "%CPU_LIMIT%"
+              },
+              "requests": {
+                "memory": "%MEMORY_REQUESTED%",
+                "cpu": "%CPU_REQUESTED%"
+              }
+            },
+            "volumeMounts": [
+              {"name": "data", "mountPath": "/usr/share/elasticsearch/data"}
+            ],
+            "securityContext": {
+              "capabilities": {
+                "add":["SYS_PTRACE"]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

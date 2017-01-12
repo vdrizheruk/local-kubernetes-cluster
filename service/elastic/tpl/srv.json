@@ -1,0 +1,29 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "elastic-%TIMESTAMP%",
+    "labels": {
+      "species": "elastic",
+      "function": "elastic-%TIMESTAMP%",
+      "name": "elastic"
+    }
+  },
+  "spec": {
+    "selector": {
+      "function": "elastic-%TIMESTAMP%"
+    },
+    "ports": [
+      {
+        "name": "port-9200",
+        "port": 9200,
+        "targetPort": "port-9200"
+      },
+      {
+        "name": "port-9300",
+        "port": 9300,
+        "targetPort": "port-9300"
+      }
+    ]
+  }
+}

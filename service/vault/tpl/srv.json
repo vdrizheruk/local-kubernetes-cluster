@@ -1,0 +1,24 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "vault-%TIMESTAMP%",
+    "labels": {
+      "species": "vault",
+      "function": "vault-%TIMESTAMP%",
+      "name": "vault"
+    }
+  },
+  "spec": {
+    "selector": {
+      "function": "vault-%TIMESTAMP%"
+    },
+    "ports": [
+      {
+        "name": "vault",
+        "port": 8200,
+        "targetPort": "vault-port"
+      }
+    ]
+  }
+}

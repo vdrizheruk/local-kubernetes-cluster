@@ -1,0 +1,72 @@
+{
+  "kind": "ReplicationController",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "vault-%TIMESTAMP%",
+    "labels": {
+      "name": "vault",
+      "version": "%TIMESTAMP%"
+    }
+  },
+  "spec": {
+    "replicas": %REPLICAS_COUNT%,
+    "selector": {"name": "vault", "version": "%TIMESTAMP%"},
+    "template": {
+      "metadata": {
+        "labels": {
+          "function": "vault-%TIMESTAMP%",
+          "name": "vault",
+          "version": "%TIMESTAMP%"
+        }
+      },
+      "spec": {
+        "volumes": [
+          {
+            "name": "file",
+            "hostPath": {"path": "/srv/service/%SRV_CONTAINER_POOL%/vault/file"}
+          },
+          {
+            "name": "logs",
+            "hostPath": {"path": "/srv/service/%SRV_CONTAINER_POOL%/vault/logs"}
+          }
+        ],
+        "containers": [
+          {
+            "name": "vault",
+            "image": "%IMAGE%",
+            "imagePullPolicy": "Always",
+            "ports": [
+              {
+                "name": "vault-port",
+                "containerPort": 8200
+              }
+            ],
+            "resources": {
+              "limits": {
+                "memory": "%MEMORY_LIMIT%",
+                "cpu": "%CPU_LIMIT%"
+              },
+              "requests": {
+                "memory": "%MEMORY_REQUESTED%",
+                "cpu": "%CPU_REQUESTED%"
+              }
+            },
+            "volumeMounts": [
+              {"name": "file", "mountPath": "/vault/file"},
+              {"name": "logs", "mountPath": "/vault/logs"}
+            ],
+            "env": [
+              {"name": "VAULT_ADDR",    "value": "http://localhost:8200"},
+              {"name": "VAULT_LOCAL_CONFIG",  "value": "{\"listener\": {\"tcp\": {\"address\": \"0.0.0.0:8200\", \"tls_disable\": \"1\"}}, \"backend\": {\"file\": {\"path\": \"/vault/file\"}}, \"default_lease_ttl\": \"999999h\", \"max_lease_ttl\": \"999999h\", \"disable_mlock\": true}"}
+            ],
+            "securityContext": {
+              "capabilities": {
+                "add":["SYS_PTRACE"]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
