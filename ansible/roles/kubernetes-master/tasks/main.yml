@@ -5,8 +5,8 @@
 
   - name: Allow Deploy pods to all nodes
     become: yes
-    shell: kubectl taint nodes --all dedicated- > /taint-nodes.txt
+    shell: kubectl taint nodes --all node-role.kubernetes.io/master- > /taint-nodes.txt
 
   - name: Install Weave Network
     become: yes
-    shell: kubectl apply -f https://git.io/weave-kube
+    shell: kubectl apply -f https://git.io/weave-kube-1.6
